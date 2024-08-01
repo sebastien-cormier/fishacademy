@@ -47,4 +47,4 @@ jobs:
         username: ubuntu
         key: ${{ secrets.KS_PRIVATE_PEM }}
         script: |
-          cd docker && unzip fishacademy.zip    
+          cd docker && unzip -o fishacademy.zip    

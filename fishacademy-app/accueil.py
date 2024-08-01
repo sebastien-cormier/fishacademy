@@ -15,7 +15,7 @@ st.markdown("# Accueil")
 st.sidebar.markdown("# Accueil")
 st.sidebar.image('../resources/fishacademy.png', caption='Fish Academy')
 
-st.markdown("La prochaine partie a lieu chez Sebastien le mardi 30 juillet 2024.")
+st.markdown("La prochaine partie a lieu chez Sebastien le mardi 27 aout 2024.")
 
 col1, col2 = st.columns(2)
 
