@@ -46,11 +46,14 @@ settings_and_mappings = '''
   }
 }'''
 
-print(f"Deleting index '{ELASTIC_INDEX}' from elasticsearch.")
-get_es_client().indices.delete(index=ELASTIC_INDEX)
+es_client = get_es_client()
+
+if es_client.indices.exists(index=ELASTIC_INDEX) :
+  print(f"Deleting index '{ELASTIC_INDEX}' from elasticsearch.")
+  es_client.indices.delete(index=ELASTIC_INDEX)
 
 print(f"Creating index '{ELASTIC_INDEX}' with settings and mappungs.")
-get_es_client().indices.create(index=ELASTIC_INDEX, ignore=400, body=settings_and_mappings)
+es_client.indices.create(index=ELASTIC_INDEX, ignore=400, body=settings_and_mappings)
 
 print(f"Import datas from CSV file.")
 print(f"Load data from {CSV_INIT_DATAS}...")
@@ -71,5 +74,5 @@ for index, row in df.iterrows() :
 	  "method": row['methode'],
 	  "notes": row['notes']
 	}
-	resp = get_es_client().index(index=ELASTIC_INDEX, document=doc)
+	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
 
