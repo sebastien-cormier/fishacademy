@@ -3,7 +3,7 @@ import pandas as pd
 from elasticsearch import Elasticsearch
 
 from include.es_client import get_es_client
-from include.app_config import ELASTIC_INDEX, CSV_INIT_DATAS
+from include.app_config import ELASTIC_INDEX, INIT_DATAS_DOC_URL
 from include.utils import convert_series_to_date
 
 def convert_euros_to_float(_value) :
@@ -56,8 +56,8 @@ print(f"Creating index '{ELASTIC_INDEX}' with settings and mappungs.")
 es_client.indices.create(index=ELASTIC_INDEX, ignore=400, body=settings_and_mappings)
 
 print(f"Import datas from CSV file.")
-print(f"Load data from {CSV_INIT_DATAS}...")
-df = pd.read_csv('/datas/FishAcademyCompta - transactions.csv')
+print(f"Load data from {INIT_DATAS_DOC_URL}...")
+df = pd.read_csv(INIT_DATAS_DOC_URL)
 df['date'] = convert_series_to_date(df['date'])
 df['montant'] = df['montant'].apply(lambda x: convert_euros_to_float(x)).astype(float)
 df['beneficiaire'] = df['beneficiaire'].fillna("NULL")

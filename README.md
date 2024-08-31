@@ -23,7 +23,10 @@ Tout d'abord, 3 variables d'environnements doivent être paramétrées :
  - __ELASTIC_HOST__ : https://es01:9200
  - __ELASTIC_PASSWORD__ : ce que vous voulez
  - __ELASTIC_CERTIFICAT__ : /usr/share/kibana/config/certs/ca/ca.crt
+ - __INIT_DATAS_DOC_ID__ : Id du google sheet servant de références aux datas
 
+ Ces variables sont déclarées dans le fichier '_.env_EXAMPLE_' qu'il faut renommer en '_.env_EXAMPLE_' afin qu'il soit interpréter par docker compose. N'oubliez pas de modifier les valeurs '_CHANGE_ME_' présentent dans le fichier.
+ 
 Pour lancer la stack elastic (elasticsearch, kibana) ainsi que Streamlit :
 
 ```

@@ -153,6 +153,7 @@ services:
       - ELASTIC_HOST=${ELASTIC_HOST}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_CERTIFICAT=${ELASTIC_CERTIFICAT}
+      - INIT_DATAS_DOC_ID=${INIT_DATAS_DOC_ID}
     volumes:
       - ./fishacademy-app:/app
       - ./datas:/datas
