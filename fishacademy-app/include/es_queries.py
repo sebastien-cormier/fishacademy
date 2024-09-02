@@ -1,7 +1,10 @@
 import pandas as pd
 
+from datetime import datetime
+import dateutil.parser
+
 from include.app_config import ELASTIC_INDEX
-from include.utils import serie_to_euro_format, convert_series_to_date
+from include.utils import serie_to_euro_format, convert_series_to_date, serie_reformat_isodate
 
 # Commons queries
 QUERY_MATCH_ALL = { "match_all": {}}
@@ -31,6 +34,33 @@ def get_sessions(_client) :
 		list_sessions.append(bucket["key"])
 	return list_sessions
 
+
+def get_last_transactions(_client, _size=10) :
+	"""
+	Get last transactions from the index
+	"""
+	query_ = {
+		"bool": {
+			"filter": [
+				{ "term": { "tx_type": "TRANSFERT" } },
+				{ "range": { "amount": { "gte": 0 } } }
+			]
+		}
+	}
+	resp = _client.search(index=ELASTIC_INDEX, size=_size, query=query_, sort='@timestamp:desc')
+	list_transfert = []
+	for hit in resp['hits']['hits']:
+		list_transfert.append( {
+				"Date": hit["_source"]["@timestamp"],
+				"Emetteur": hit["_source"]["player"],
+				"Beneficiaire": hit["_source"]["beneficiary"],
+				"Montant": round(float(hit["_source"]["amount"]),2),
+				"Moyen": hit["_source"]["method"]
+			})
+	df_ = pd.DataFrame(list_transfert)
+	df_['Montant'] = serie_to_euro_format(df_['Montant'])
+	df_['Date'] = serie_reformat_isodate(df_['Date'])
+	return df_
 
 
 def index_game_session(_client, _df_session) :
@@ -221,3 +251,27 @@ def get_wallet(_client) :
 	df_['Solde'] = serie_to_euro_format(df_['money'])
 
 	return df_[['Joueur','Solde']]
+
+def index_transaction(es_client, player_from, player_to, amount_, method_) :
+	doc = {
+	  "@timestamp": datetime.now().isoformat(),
+	  "session": 'TODO',
+	  "player": player_from,
+	  "tx_type": 'TRANSFERT',
+	  "amount": amount_,
+	  "beneficiary": player_to,
+	  "method": method_,
+	  "notes": 'created with fishacademy app'
+	}
+	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
+	doc = {
+	  "@timestamp": datetime.now().isoformat(),
+	  "session": 'TODO',
+	  "player": player_to,
+	  "tx_type": 'TRANSFERT',
+	  "amount": -amount_,
+	  "beneficiary": player_from,
+	  "method": method_,
+	  "notes": 'created with fishacademy app'
+	}
+	resp = es_client.index(index=ELASTIC_INDEX, document=doc)

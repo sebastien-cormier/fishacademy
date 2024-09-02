@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-from include.next_session import get_next_session, FLAG_ABSENT, FLAG_NO_ANSWER, FLAG_PRESENT
+from include.next_session import get_next_session
 from include.new_session import save_shopping, save_recave, save_chips_return, save_draft_csv, delete_draft_csv, load_draft_csv
 from include.utils import to_euro
 from include.es_client import get_es_client
@@ -27,8 +27,10 @@ if 'current_bank_amount' not in st.session_state:
 if 'food_amount' not in st.session_state:
     st.session_state['food_amount'] = 10.0
 
-df_next_session = get_next_session()
-list_player = df_next_session.loc[df_next_session.iscoming==FLAG_PRESENT].player.unique().tolist()
+next_session = get_next_session()
+list_player = next_session['coming']
+list_player.append(next_session['host'])
+
 if 'list_total_chips' not in st.session_state:
     st.session_state['list_total_chips'] = [0] * len(list_player)
 if 'list_pie_explode' not in st.session_state:
@@ -88,7 +90,7 @@ else :
     if st.session_state['setting_ok'] :
         with st.sidebar.form("recave", clear_on_submit=True):
             player_recave = st.selectbox("Ajouter une cave", [*["Joueur"], *list_player])
-            amount_recave = st.slider("Montant de la recave (€) ?", 5.0, 10.0, 10.0,  0.05)
+            amount_recave = st.slider("Montant de la recave (€) ?", 0.0, 10.0, 10.0,  0.05)
             submit = st.form_submit_button('Ajouter')
             if submit:
                 if player_recave == "Joueur" :
