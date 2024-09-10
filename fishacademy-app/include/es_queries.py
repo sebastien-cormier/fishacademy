@@ -317,8 +317,8 @@ def get_rebuy_per_sessions(_client) :
 			if max_amount_ < amount_ : 
 				max_amount_ = round(amount_,2)
 
-		avg_rebuy_ = round( ((cumul_amount_ / session_count_) / 10.0), 2)
-		result.append({"Joueur":player_, "Nb sessions":session_count_, "Recaves (moy.)": avg_rebuy_, "Max.": round((max_amount_/10),2)})
+		avg_rebuy_ = round( ((cumul_amount_ / session_count_) / 10.0)-1, 2)
+		result.append({"Joueur":player_, "Nb sessions":session_count_, "Recaves (moy.)": avg_rebuy_, "Max.": round((max_amount_/10)-1,2)})
 	df_ = pd.DataFrame(result)
 
 	return df_[['Joueur','Nb sessions','Recaves (moy.)','Max.']]
