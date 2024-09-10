@@ -2,19 +2,20 @@ import streamlit as st
 
 import pandas as pd
 from include.es_client import get_es_client
-from include.es_queries import get_winning_history, get_players, get_sessions
+from include.es_queries import get_winning_history, get_players, get_sessions, get_rebuy_per_sessions
 
 # -------------- #
 # Initiatisation #
 # -------------- #
 
-list_sessions = get_sessions(get_es_client())
-list_players = get_players(get_es_client())
+es_client = get_es_client()
+list_sessions = get_sessions(es_client)
+list_players = get_players(es_client)
 
 def init_df_winning() :
     df_winning_ = pd.DataFrame()
-    for p in get_players(get_es_client()) :
-        df_winning_ = pd.concat([df_winning_.loc[:],get_winning_history(get_es_client(),p)])
+    for p in get_players(es_client) :
+        df_winning_ = pd.concat([df_winning_.loc[:],get_winning_history(es_client,p)])
         
     df_winning_["Session CG #0"] = 0.0
     df_winning_.fillna(0.0, inplace=True)
@@ -40,6 +41,10 @@ st.sidebar.markdown("# Statistiques")
 
 st.markdown("# Statistiques")
 st.divider()
-
+st.markdown("## Evolutions des gains")
 st.line_chart(init_df_winning().T)
 
+st.divider()
+st.markdown("## Recaves")
+df_recaves= get_rebuy_per_sessions(es_client)
+st.dataframe(df_recaves.set_index(df_recaves.columns[0]))

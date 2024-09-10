@@ -10,6 +10,9 @@ from include.utils import serie_to_euro_format, convert_series_to_date, serie_re
 QUERY_MATCH_ALL = { "match_all": {}}
 QUERY_FILTER_SELL_OR_BUY_CHIPS = { "bool": { "filter": [ { "terms": { "tx_type": ["BUY_CHIPS","SELL_CHIPS"] } } ] } }
 
+def get_query_filter_by_type(_tx_type) :
+	return { "bool": { "filter": [ { "term": { "tx_type": _tx_type } } ] } }
+
 def get_players(_client) :
 	"""
 	Get all players from the index
@@ -273,3 +276,49 @@ def index_transaction(es_client, player_from, player_to, amount_, method_, sessi
 	  "notes": 'created with fishacademy app'
 	}
 	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
+
+def get_rebuy_per_sessions(_client) :
+	"""
+	Get all rebuy sum for each player for each sessions
+	"""
+	aggs_ = {
+		"player_agg": {
+		"terms": {
+			"field": "player"
+		},
+		"aggs": {
+			"session_agg": {
+			"terms": {
+				"field": "session"
+			},
+			"aggs": {
+				"amount": {
+				"sum": {
+					"field": "amount"
+				}
+				}
+			}
+			}
+		}
+		}
+	}
+	resp = _client.search(index=ELASTIC_INDEX, size=0, query=get_query_filter_by_type("BUY_CHIPS"), aggs=aggs_)
+	
+	result = []
+	for bucket_player in resp['aggregations']['player_agg']['buckets']:
+		player_ = bucket_player["key"]
+		max_amount_ = 0.0
+		cumul_amount_ = 0.0
+		session_count_ = 0
+		for bucket_session in bucket_player['session_agg']['buckets']:
+			session_count_ = session_count_ + 1
+			amount_ = -float(bucket_session["amount"]["value"])
+			cumul_amount_ = round( (cumul_amount_ + amount_), 2)
+			if max_amount_ < amount_ : 
+				max_amount_ = round(amount_,2)
+
+		avg_rebuy_ = round( ((cumul_amount_ / session_count_) / 10.0), 2)
+		result.append({"Joueur":player_, "Nb sessions":session_count_, "Recaves (moy.)": avg_rebuy_, "Max.": max_amount_})
+	df_ = pd.DataFrame(result)
+
+	return df_[['Joueur','Nb sessions','Recaves (moy.)','Max.']]
