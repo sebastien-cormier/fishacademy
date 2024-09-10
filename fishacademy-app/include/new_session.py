@@ -32,6 +32,7 @@ def save_shopping(_session, _shopper, _list_players, _contribution) :
             , index=[0])
         df_ = pd.concat([df_.loc[:],new_row_]).reset_index(drop=True)
     
+    save_draft_csv(df_)
     return df_
 
 
@@ -45,7 +46,9 @@ def save_recave(_df, _session_name, _user, _amount) :
             'amount': -round(_amount,2)
         }
         , index=[0])
-    return pd.concat([_df.loc[:],new_row_]).reset_index(drop=True)
+    res_ = pd.concat([_df.loc[:],new_row_]).reset_index(drop=True)
+    save_draft_csv(res_)
+    return res_
 
 
 def save_chips_return(_df, _session_name, _user, _amount) :
@@ -58,7 +61,9 @@ def save_chips_return(_df, _session_name, _user, _amount) :
             'amount': round(_amount,2)
         }
         , index=[0])
-    return pd.concat([_df.loc[:],new_row_]).reset_index(drop=True)
+    res_ = pd.concat([_df.loc[:],new_row_]).reset_index(drop=True)
+    save_draft_csv(res_)
+    return res_
 
 
 def load_draft_csv() :
@@ -85,3 +90,4 @@ def save_draft_csv(_df_session) :
 
 def delete_draft_csv() :
     os.remove(CSV_CURRENT_SESSION)
+

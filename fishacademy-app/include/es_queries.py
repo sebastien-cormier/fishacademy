@@ -250,10 +250,10 @@ def get_wallet(_client) :
 
 	return df_[['Joueur','Solde']]
 
-def index_transaction(es_client, player_from, player_to, amount_, method_) :
+def index_transaction(es_client, player_from, player_to, amount_, method_, session_) :
 	doc = {
 	  "@timestamp": datetime.now().isoformat(),
-	  "session": 'TODO',
+	  "session": session_,
 	  "player": player_from,
 	  "tx_type": 'TRANSFERT',
 	  "amount": amount_,
@@ -264,7 +264,7 @@ def index_transaction(es_client, player_from, player_to, amount_, method_) :
 	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
 	doc = {
 	  "@timestamp": datetime.now().isoformat(),
-	  "session": 'TODO',
+	  "session": session_,
 	  "player": player_to,
 	  "tx_type": 'TRANSFERT',
 	  "amount": -amount_,

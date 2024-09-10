@@ -1,7 +1,7 @@
 import os
 
-APP_VERSION = "0.0.2"
-APP_VERSION_DATE = "Lundi 2 septembre 2024"
+APP_VERSION = "0.0.3"
+APP_VERSION_DATE = "mardi 10 septembre 2024"
 
 SESSION_PREFIX = 'Session CG #'
 
@@ -18,5 +18,4 @@ INIT_DATAS_DOC_URL = f"https://docs.google.com/spreadsheets/d/{INIT_DATAS_DOC_ID
 PICKLE_NEXT_SESSION = '/datas/next_session.obj'
 
 # CSV
-CSV_NEXT_SESSION = '/datas/next_game_registration.csv'
 CSV_CURRENT_SESSION = '/datas/current_session.csv'

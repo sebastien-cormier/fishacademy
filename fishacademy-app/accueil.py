@@ -17,7 +17,10 @@ st.markdown("# Accueil")
 st.sidebar.markdown("# Accueil")
 st.sidebar.image('../resources/fishacademy.png', caption='Fish Academy')
 
-st.markdown(f"La prochaine partie a lieu chez {next_session['host']} le {next_session['date']}.")
+if next_session is None :
+    st.markdown(f"Pas de sessions prévues prochainement.")
+else :
+    st.markdown(f"La prochaine partie a lieu chez {next_session['host']} le {next_session['date']}.")
 
 col1, col2 = st.columns(2)
 

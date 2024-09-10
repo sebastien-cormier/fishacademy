@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import pickle
 
@@ -56,4 +57,7 @@ def get_next_session_name(_previous_sessions) :
 		if max_ < session_num_ :
 			max_ = session_num_
 
-	return f'Session CG #{max_+1}'
+	return f'{SESSION_PREFIX}{max_+1}'
+
+def reset_next_session() :
+    os.remove(PICKLE_NEXT_SESSION)

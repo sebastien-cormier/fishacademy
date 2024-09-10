@@ -50,7 +50,7 @@ else :
 				save_registration(next_session, registered_player, options.index(is_coming_radio))
 				st.rerun()
 
-	st.markdown(f"La prochaine partie aura lieu le{next_session['date']} chez {next_session['host']}.")
+	st.markdown(f"La prochaine partie aura lieu le {next_session['date']} chez {next_session['host']}.")
 	st.markdown(f"Nombre de joueurs confirmés : __{number_of_players} joueurs__.")
 
 	st.header(":white_check_mark: Présents")
