@@ -81,8 +81,6 @@ def index_game_session(_client, _df_session) :
 		}
 		resp = _client.index(index=ELASTIC_INDEX, document=doc)
 
-
-
 def get_leaderboard(_client) :
 	"""
 	Get the historical winning amount for all players

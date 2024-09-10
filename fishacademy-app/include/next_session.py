@@ -48,3 +48,12 @@ def get_next_session() :
 	else :
 		filehandler = open(PICKLE_NEXT_SESSION, 'rb') 
 		return pickle.load(filehandler)
+
+def get_next_session_name(_previous_sessions) :
+	max_ = 0
+	for session_ in _previous_sessions :
+		session_num_ = int(session_.replace(SESSION_PREFIX,''))
+		if max_ < session_num_ :
+			max_ = session_num_
+
+	return f'Session CG #{max_+1}'

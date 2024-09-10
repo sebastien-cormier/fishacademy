@@ -3,6 +3,8 @@ import os
 APP_VERSION = "0.0.2"
 APP_VERSION_DATE = "Lundi 2 septembre 2024"
 
+SESSION_PREFIX = 'Session CG #'
+
 # Elasticsearch
 ELASTIC_HOST = os.environ['ELASTIC_HOST']
 ELASTIC_USER = 'elastic'

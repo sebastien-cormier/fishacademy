@@ -1,15 +1,17 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-from include.next_session import get_next_session
+from include.next_session import get_next_session, get_next_session_name
 from include.new_session import save_shopping, save_recave, save_chips_return, save_draft_csv, delete_draft_csv, load_draft_csv
 from include.utils import to_euro
 from include.es_client import get_es_client
-from include.es_queries import index_game_session
+from include.es_queries import index_game_session, get_sessions
+
+es_client = get_es_client()
 
 def valid_game_session(_df_session) :
     if round(float(df_session.amount.sum()),2)==0.0 :
-        index_game_session(get_es_client(), _df_session)
+        index_game_session(es_client, _df_session)
         delete_draft_csv()
         return True
     else :
@@ -19,7 +21,7 @@ def valid_game_session(_df_session) :
 if 'setting_ok' not in st.session_state:
     st.session_state['setting_ok'] = False
 if 'session_name' not in st.session_state:
-    st.session_state['session_name'] = 'Session CG #5'
+    st.session_state['session_name'] = get_next_session_name(get_sessions(es_client))
 if 'initial_bank_amount' not in st.session_state:
     st.session_state['initial_bank_amount'] = 300
 if 'current_bank_amount' not in st.session_state:
