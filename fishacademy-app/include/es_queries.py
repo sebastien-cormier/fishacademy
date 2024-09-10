@@ -116,9 +116,9 @@ def get_leaderboard(_client) :
 	for bucket in resp['aggregations']['player_agg']['buckets']:
 		result.append({"Joueur":bucket["key"], "winning":round(float(bucket["winninf_aggs"]["value"]),2)})
 	df_ = pd.DataFrame(result)
-	df_['Gains Totaux'] = serie_to_euro_format(df_['winning'])
+	
 
-	return df_[['Joueur','Gains Totaux']]
+	return df_[['Joueur','winning']]
 
 
 
@@ -318,7 +318,7 @@ def get_rebuy_per_sessions(_client) :
 				max_amount_ = round(amount_,2)
 
 		avg_rebuy_ = round( ((cumul_amount_ / session_count_) / 10.0), 2)
-		result.append({"Joueur":player_, "Nb sessions":session_count_, "Recaves (moy.)": avg_rebuy_, "Max.": max_amount_})
+		result.append({"Joueur":player_, "Nb sessions":session_count_, "Recaves (moy.)": avg_rebuy_, "Max.": round((max_amount_/10),2)})
 	df_ = pd.DataFrame(result)
 
 	return df_[['Joueur','Nb sessions','Recaves (moy.)','Max.']]

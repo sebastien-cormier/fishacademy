@@ -9,6 +9,7 @@ from include.app_config import *
 from include.es_client import get_es_client
 from include.es_queries import get_leaderboard, get_games
 from include.next_session import get_next_session
+from include.utils import serie_to_euro_format
 
 es_client = get_es_client()
 next_session = get_next_session()
@@ -26,6 +27,9 @@ col1, col2 = st.columns(2)
 
 col1.markdown("## Leaderboard")
 df_leaderboard = get_leaderboard(es_client)
+df_leaderboard['Gains Totaux'] = serie_to_euro_format(df_leaderboard['winning'])
+df_leaderboard = df_leaderboard.drop('winning', axis=1)
+
 col1.dataframe(df_leaderboard.set_index(df_leaderboard.columns[0]))
 
 col2.markdown("## Dernières parties")

@@ -2,7 +2,8 @@ import streamlit as st
 
 import pandas as pd
 from include.es_client import get_es_client
-from include.es_queries import get_winning_history, get_players, get_sessions, get_rebuy_per_sessions
+from include.es_queries import get_winning_history, get_players, get_sessions, get_rebuy_per_sessions, get_leaderboard
+from include.utils import serie_to_euro_format
 
 # -------------- #
 # Initiatisation #
@@ -32,6 +33,12 @@ def init_df_winning() :
     
     return df_winning_
 
+def get_sessions_stats() :
+    df_leaderboard = get_leaderboard(es_client)
+    df_recaves= get_rebuy_per_sessions(es_client)
+    df_stats_sessions = pd.merge(df_leaderboard, df_recaves, left_on='Joueur', right_on='Joueur', how='left')
+    df_stats_sessions['Gains moyens'] = serie_to_euro_format(round((df_stats_sessions['winning'] / df_stats_sessions['Nb sessions']), 2))
+    return df_stats_sessions[['Joueur','Nb sessions', 'Recaves (moy.)','Max.','Gains moyens']]
 
 # --------- #
 # Affichage #
@@ -46,5 +53,7 @@ st.line_chart(init_df_winning().T)
 
 st.divider()
 st.markdown("## Recaves")
-df_recaves= get_rebuy_per_sessions(es_client)
-st.dataframe(df_recaves.set_index(df_recaves.columns[0]))
+
+df_sessions_stats = get_sessions_stats()
+st.dataframe(df_sessions_stats.set_index(df_sessions_stats.columns[0]))
+st.write(":information_source: _Une recave correspond à 10 euros._")
