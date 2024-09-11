@@ -26,7 +26,7 @@ with st.expander("Ajout transaction", expanded=False):
 	with st.form("transaction"):
 		player_from = st.selectbox("Emetteur",list_all_players)
 		player_to = st.selectbox("Beneficiaire",list_all_players)
-		amount_ = st.slider("Montant (€)", 0.0, 300.0, 10.0,  0.1)
+		amount_ = st.slider("Montant (€)", 0.0, 300.0, 10.0,  0.05)
 		options = ["PAYPAL", "CASH", "BANK"]
 		method_ = st.radio(
 				"Moyen", options, label_visibility='collapsed', 
