@@ -18,4 +18,6 @@ INIT_DATAS_DOC_URL = f"https://docs.google.com/spreadsheets/d/{INIT_DATAS_DOC_ID
 PICKLE_NEXT_SESSION = '/datas/next_session.obj'
 
 # CSV
-CSV_CURRENT_SESSION = '/datas/current_session.csv'
+CSV_CURRENT_SESSION = '/datas/fishacademy/current_session.csv'
+CSV_EXPORT_FILE = '/datas/fishacademy/fishacademy_transactions.csv'
+CSV_SESION_BACKUP_FILE = '/datas/fishacademy/session_backup/session_backup_<DATE>.csv'

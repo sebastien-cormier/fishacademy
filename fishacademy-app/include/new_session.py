@@ -65,6 +65,13 @@ def save_chips_return(_df, _session_name, _user, _amount) :
     save_draft_csv(res_)
     return res_
 
+def backup_draft_csv(_df_session) :
+    """
+    Create a backup copy of the draft
+    """
+    filename_ = CSV_SESION_BACKUP_FILE.replace('<DATE>',datetime.now().strftime('%Y-%m-%d_%H%M%S'))
+    _df_session.to_csv(filename_, sep=',', encoding='utf-8')
+
 
 def load_draft_csv() :
      if Path(CSV_CURRENT_SESSION).is_file() :

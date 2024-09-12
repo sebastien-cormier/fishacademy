@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from datetime import datetime
 import dateutil.parser
@@ -6,12 +7,33 @@ import dateutil.parser
 from include.app_config import ELASTIC_INDEX
 from include.utils import serie_to_euro_format, convert_series_to_date, serie_reformat_isodate
 
+MAX_QUERY_SIZE = 10000
+
 # Commons queries
 QUERY_MATCH_ALL = { "match_all": {}}
 QUERY_FILTER_SELL_OR_BUY_CHIPS = { "bool": { "filter": [ { "terms": { "tx_type": ["BUY_CHIPS","SELL_CHIPS"] } } ] } }
 
 def get_query_filter_by_type(_tx_type) :
 	return { "bool": { "filter": [ { "term": { "tx_type": _tx_type } } ] } }
+
+def export_all_datas(_client) :
+	resp = _client.search(index=ELASTIC_INDEX, size=MAX_QUERY_SIZE, query=QUERY_MATCH_ALL)
+	datas_ = []
+	for hit in resp['hits']['hits']:
+		datas_.append({
+				"session": hit["_source"]["session"],
+				"date": hit["_source"]["@timestamp"],
+				"joueur": hit["_source"]["player"],
+				"type": hit["_source"]["tx_type"],
+				"montant": str(round(float(hit["_source"]["amount"]),2)).replace(".",","),
+				"beneficiaire": hit["_source"]["beneficiary"],
+				"methode": hit["_source"]["method"],
+				"notes": hit["_source"]["notes"]
+			})
+	df_ = pd.DataFrame(datas_)
+	df_ = df_.replace('NULL', np.nan)
+	df_ = df_.sort_values("date", ascending=True).reindex()
+	return df_
 
 def get_players(_client) :
 	"""
@@ -23,8 +45,6 @@ def get_players(_client) :
 	for bucket in resp['aggregations']['player_agg']['buckets']:
 		list_players.append(bucket["key"])
 	return list_players
-
-
 
 def get_sessions(_client) :
 	"""
