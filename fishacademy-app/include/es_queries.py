@@ -5,7 +5,7 @@ from datetime import datetime
 import dateutil.parser
 
 from include.app_config import ELASTIC_INDEX
-from include.utils import serie_to_euro_format, convert_series_to_date, serie_reformat_isodate
+from include.utils import serie_to_euro_format, convert_csv_series_to_date, serie_reformat_isodate
 
 MAX_QUERY_SIZE = 10000
 
@@ -33,6 +33,7 @@ def export_all_datas(_client) :
 	df_ = pd.DataFrame(datas_)
 	df_ = df_.replace('NULL', np.nan)
 	df_ = df_.sort_values("date", ascending=True).reindex()
+	df_['date'] = serie_reformat_isodate(df_['date'], format='%d/%m/%Y %H:%M:%S')
 	return df_
 
 def get_players(_client) :
@@ -91,7 +92,7 @@ def index_game_session(_client, _df_session) :
 	Save the whole game session in the index once it's validate
 	"""
 	_df_session = _df_session.sort_values('@timestamp', ascending=True)
-	_df_session['@timestamp_ts'] = convert_series_to_date(_df_session['@timestamp'])
+	_df_session['@timestamp_ts'] = convert_csv_series_to_date(_df_session['@timestamp'])
 
 	for index, row in _df_session.iterrows() :
 		doc = {

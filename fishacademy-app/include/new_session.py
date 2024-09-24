@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime 
 from include.app_config import *
 from pathlib import Path
+from include.utils import get_datetime_paris
 
 def save_shopping(_session, _shopper, _list_players, _contribution) :
     
@@ -11,7 +12,7 @@ def save_shopping(_session, _shopper, _list_players, _contribution) :
 
     df_ = pd.DataFrame(
         {
-            '@timestamp': datetime.now(),
+            '@timestamp': get_datetime_paris(),
             'session': _session,
             'player': _shopper, 
             'tx_type': 'COURSES',
@@ -22,7 +23,7 @@ def save_shopping(_session, _shopper, _list_players, _contribution) :
     for p in _list_players :
         new_row_ = pd.DataFrame(
             {
-                '@timestamp': datetime.now(),
+                '@timestamp': get_datetime_paris(),
                 'session': _session,
                 'player': p, 
                 'tx_type': 'REPAS',
@@ -39,7 +40,7 @@ def save_shopping(_session, _shopper, _list_players, _contribution) :
 def save_recave(_df, _session_name, _user, _amount) :
     new_row_ = pd.DataFrame(
         {
-            '@timestamp': datetime.now(),
+            '@timestamp': get_datetime_paris(),
             'session': _session_name,
             'player': _user, 
             'tx_type': 'BUY_CHIPS',
@@ -54,7 +55,7 @@ def save_recave(_df, _session_name, _user, _amount) :
 def save_chips_return(_df, _session_name, _user, _amount) :
     new_row_ = pd.DataFrame(
         {
-            '@timestamp': datetime.now(),
+            '@timestamp': get_datetime_paris(),
             'session': _session_name,
             'player': _user, 
             'tx_type': 'SELL_CHIPS',
@@ -69,7 +70,7 @@ def backup_draft_csv(_df_session) :
     """
     Create a backup copy of the draft
     """
-    filename_ = CSV_SESION_BACKUP_FILE.replace('<DATE>',datetime.now().strftime('%Y-%m-%d_%H%M%S'))
+    filename_ = CSV_SESION_BACKUP_FILE.replace('<DATE>',get_datetime_paris().strftime('%Y-%m-%d_%H%M%S'))
     _df_session.to_csv(filename_, sep=',', encoding='utf-8')
 
 
@@ -87,6 +88,7 @@ def load_draft_csv() :
                             })
         #df_['@timestamp2'] = pd.to_datetime(df_['@timestamp']).dt.strftime('%Y-%m-%dT%H:%M:%SZ')
         df_['@timestamp'] = pd.to_datetime(df_['@timestamp'])
+        df_['Date'] = df_['@timestamp'].apply(lambda x : x.strftime('%Y-%m-%d %H:%M:%S'))
         return df_
      else :
          return None
