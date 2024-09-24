@@ -1,7 +1,7 @@
 import os
 
-APP_VERSION = "0.0.3"
-APP_VERSION_DATE = "mardi 10 septembre 2024"
+APP_VERSION = "0.0.4"
+APP_VERSION_DATE = "mardi 24 septembre 2024"
 
 SESSION_PREFIX = 'Session CG #'
 
