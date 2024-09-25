@@ -1,8 +1,8 @@
 import pandas as pd
 
 import dateutil.parser
-from datetime import datetime, timezone
-import pytz
+from datetime import datetime
+from pytz import timezone
 
 def to_euro(_val) :
 	"""
@@ -22,7 +22,7 @@ def serie_reformat_isodate(_serie, format='%x', target_tz="Europe/Paris") :
 	Format from an iso format to another format
 	"""
 	_tmp_serie = _serie.apply(lambda x : dateutil.parser.isoparse(x))
-	_tmp_serie = _tmp_serie.apply(lambda x : x.replace(tzinfo=timezone.utc).astimezone(tz=target_tz))
+	_tmp_serie = _tmp_serie.apply(lambda x : x.astimezone(timezone(target_tz)))
 	return _tmp_serie.apply(lambda x : x.strftime(format)) 
 
 def convert_csv_series_to_date(_series) :

@@ -12,7 +12,7 @@ es_client = get_es_client()
 def valid_game_session(_df_session) :
     if round(float(df_session.amount.sum()),2)==0.0 :
         index_game_session(es_client, _df_session)
-        backup_draft_csv()
+        backup_draft_csv(_df_session)
         delete_draft_csv()
         reset_next_session()
         return True

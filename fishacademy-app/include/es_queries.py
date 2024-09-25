@@ -27,13 +27,14 @@ def export_all_datas(_client) :
 				"type": hit["_source"]["tx_type"],
 				"montant": str(round(float(hit["_source"]["amount"]),2)).replace(".",","),
 				"beneficiaire": hit["_source"]["beneficiary"],
-				"methode": hit["_source"]["method"],
-				"notes": hit["_source"]["notes"]
+				"methode": hit["_source"]["method"] if ("method" in hit["_source"]) else None,
+				"notes": hit["_source"]["notes"] if ("notes" in hit["_source"]) else None
 			})
 	df_ = pd.DataFrame(datas_)
 	df_ = df_.replace('NULL', np.nan)
 	df_ = df_.sort_values("date", ascending=True).reindex()
 	df_['date'] = serie_reformat_isodate(df_['date'], format='%d/%m/%Y %H:%M:%S')
+	df_['beneficiaire'] = df_['beneficiaire'].apply(lambda x : None if x == 'nan' else x)
 	return df_
 
 def get_players(_client) :
