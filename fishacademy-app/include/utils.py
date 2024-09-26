@@ -24,7 +24,7 @@ def serie_parse_elastic_date(_serie) :
 	Format from an iso format to another format
 	"""
 	_tmp_serie = _serie.apply(lambda x : datetime.fromisoformat(x))
-	_tmp_serie = _tmp_serie.apply(lambda x : x.astimezone(ZoneInfo(DATE_ZONE_INFO)))
+	_tmp_serie = _tmp_serie.apply(lambda x : x.replace(tzinfo=ZoneInfo(DATE_ZONE_INFO)))
 	return _tmp_serie.apply(lambda x : get_str_datetime(x)) 
 
 def convert_csv_series_to_date(_series) :
