@@ -37,11 +37,7 @@ with st.expander("Ajout transaction", expanded=False):
 			index_transaction(es_client, player_from, player_to, amount_, method_, last_session_name)
 			sleep(1)
 			st.rerun()
-				
-
-
+			
 st.markdown("## Dernières transactions")
 st.dataframe(df_transaction.set_index(df_transaction.columns[0]))
-
-
 

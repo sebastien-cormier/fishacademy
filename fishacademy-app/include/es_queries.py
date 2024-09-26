@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 
-from datetime import datetime
-import dateutil.parser
 
 from include.app_config import ELASTIC_INDEX
-from include.utils import serie_to_euro_format, convert_csv_series_to_date, serie_reformat_isodate
+from include.utils import serie_to_euro_format, convert_csv_series_to_date, serie_parse_elastic_date, now
 
 MAX_QUERY_SIZE = 10000
 
@@ -33,7 +31,7 @@ def export_all_datas(_client) :
 	df_ = pd.DataFrame(datas_)
 	df_ = df_.replace('NULL', np.nan)
 	df_ = df_.sort_values("date", ascending=True).reindex()
-	df_['date'] = serie_reformat_isodate(df_['date'], format='%d/%m/%Y %H:%M:%S')
+	df_['date'] = serie_parse_elastic_date(df_['date'])
 	df_['beneficiaire'] = df_['beneficiaire'].apply(lambda x : None if x == 'nan' else x)
 	return df_
 
@@ -84,7 +82,7 @@ def get_last_transactions(_client, _size=10) :
 			})
 	df_ = pd.DataFrame(list_transfert)
 	df_['Montant'] = serie_to_euro_format(df_['Montant'])
-	df_['Date'] = serie_reformat_isodate(df_['Date'])
+	df_['Date'] = serie_parse_elastic_date(df_['Date'])
 	return df_
 
 
@@ -277,7 +275,7 @@ def get_wallet(_client) :
 
 def index_transaction(es_client, player_from, player_to, amount_, method_, session_) :
 	doc = {
-	  "@timestamp": datetime.now().isoformat(),
+	  "@timestamp": now().isoformat(),
 	  "session": session_,
 	  "player": player_from,
 	  "tx_type": 'TRANSFERT',
@@ -288,7 +286,7 @@ def index_transaction(es_client, player_from, player_to, amount_, method_, sessi
 	}
 	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
 	doc = {
-	  "@timestamp": datetime.now().isoformat(),
+	  "@timestamp": now().isoformat(),
 	  "session": session_,
 	  "player": player_to,
 	  "tx_type": 'TRANSFERT',

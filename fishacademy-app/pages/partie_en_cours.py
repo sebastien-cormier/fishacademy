@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 from include.next_session import get_next_session, get_next_session_name, reset_next_session
 from include.new_session import save_shopping, save_recave, save_chips_return, delete_draft_csv, load_draft_csv, backup_draft_csv
-from include.utils import to_euro
+from include.utils import to_euro, get_str_datetime
 from include.es_client import get_es_client
 from include.es_queries import index_game_session, get_sessions
 
@@ -19,7 +19,6 @@ def valid_game_session(_df_session) :
     else :
         return False
     
-
 next_session = get_next_session()
 
 if next_session is None :
@@ -158,7 +157,10 @@ else :
 
         st.divider()
         st.markdown("## Dernières transactions de la session")
-        st.dataframe(df_session.set_index(df_session.columns[0]))
+        df_session_display = df_session.copy()
+        df_session_display['hour'] = df_session_display['@timestamp'].apply(lambda x : get_str_datetime(dt=x))
+        df_session_display = df_session_display[['hour','player','tx_type','amount','beneficiary']]
+        st.dataframe(df_session_display.set_index(df_session_display.columns[0]))
 
         st.divider()
         col1, col2 = st.columns(2)

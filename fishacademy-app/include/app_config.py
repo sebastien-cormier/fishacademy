@@ -1,9 +1,11 @@
 import os
 
-APP_VERSION = "0.0.4"
-APP_VERSION_DATE = "mardi 24 septembre 2024"
+APP_VERSION = "0.1.0"
+APP_VERSION_DATE = "jeudi 26 septembre 2024"
 
 SESSION_PREFIX = 'Session CG #'
+
+DATE_ZONE_INFO = "Europe/Paris"
 
 # Elasticsearch
 ELASTIC_HOST = os.environ['ELASTIC_HOST']
@@ -15,7 +17,7 @@ ELASTIC_INDEX = 'fishacademy'
 INIT_DATAS_DOC_ID = os.environ['INIT_DATAS_DOC_ID']
 INIT_DATAS_DOC_URL = f"https://docs.google.com/spreadsheets/d/{INIT_DATAS_DOC_ID}/export?format=csv"
 
-PICKLE_NEXT_SESSION = '/datas/next_session.obj'
+PICKLE_NEXT_SESSION = '/datas/fishacademy/next_session.obj'
 
 # CSV
 CSV_CURRENT_SESSION = '/datas/fishacademy/current_session.csv'
