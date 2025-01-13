@@ -35,16 +35,16 @@ jobs:
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.4
       with:
-        host: ns36460.ip-87-98-218.eu
+        host: fishacademy.fr
         username: ubuntu
-        key: ${{ secrets.KS_PRIVATE_PEM }}
+        key: ${{ secrets.ARTISAN_DEV_SECRET_KEY }}
         source: "fishacademy.zip"
         target: /home/ubuntu/docker
     - name: Unzip package
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ns36460.ip-87-98-218.eu
+        host: 144.217.255.171
         username: ubuntu
-        key: ${{ secrets.KS_PRIVATE_PEM }}
+        key: ${{ secrets.ARTISAN_DEV_SECRET_KEY }}
         script: |
           cd docker && unzip -o fishacademy.zip    
