@@ -1,0 +1,14 @@
+import streamlit as st
+
+import pandas as pd
+
+st.markdown("# Saison 2024")
+
+st.image('../resources/2024_FinalLeaderBoard.png', caption='Leaderboard 2024')
+st.divider()
+
+st.image('../resources/2024_FinalRanking.png', caption='Ranking 2024')
+st.divider()
+
+st.image('../resources/2024_FinalCompta.png', caption='Compta 2024')
+st.divider()

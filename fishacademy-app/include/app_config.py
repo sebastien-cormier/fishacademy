@@ -1,7 +1,7 @@
 import os
 
 APP_VERSION = "0.1.0"
-APP_VERSION_DATE = "jeudi 26 septembre 2024"
+APP_VERSION_DATE = "Lundi 13 janvier 2025"
 
 SESSION_PREFIX = 'Session CG #'
 
@@ -17,9 +17,9 @@ ELASTIC_INDEX = 'fishacademy'
 INIT_DATAS_DOC_ID = os.environ['INIT_DATAS_DOC_ID']
 INIT_DATAS_DOC_URL = f"https://docs.google.com/spreadsheets/d/{INIT_DATAS_DOC_ID}/export?format=csv"
 
-PICKLE_NEXT_SESSION = '/datas/fishacademy/next_session.obj'
+PICKLE_NEXT_SESSION = '/datas/next_session.obj'
 
 # CSV
-CSV_CURRENT_SESSION = '/datas/fishacademy/current_session.csv'
-CSV_EXPORT_FILE = '/datas/fishacademy/fishacademy_transactions.csv'
-CSV_SESION_BACKUP_FILE = '/datas/fishacademy/session_backup/session_backup_<DATE>.csv'
+CSV_CURRENT_SESSION = '/datas/current_session.csv'
+CSV_EXPORT_FILE = '/datas/fishacademy_transactions.csv'
+CSV_SESION_BACKUP_FILE = '/datas/session_backup/session_backup_<DATE>.csv'
