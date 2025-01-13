@@ -47,4 +47,4 @@ jobs:
         username: ubuntu
         key: ${{ secrets.ARTISAN_DEV_SECRET_KEY }}
         script: |
-          cd docker && unzip -o fishacademy.zip    
+          unzip -o fishacademy.zip    
