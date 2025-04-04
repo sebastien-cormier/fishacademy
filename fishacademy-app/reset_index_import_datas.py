@@ -58,21 +58,22 @@ es_client.indices.create(index=ELASTIC_INDEX, ignore=400, body=settings_and_mapp
 print(f"Import datas from CSV file.")
 print(f"Load data from {INIT_DATAS_DOC_URL}...")
 df = pd.read_csv(INIT_DATAS_DOC_URL)
-df['date'] = convert_csv_series_to_date(df['date'])
+#df['date'] = convert_csv_series_to_date(df['date'])
+df['date'] = pd.to_datetime(df['date'], format = '%Y-%m-%d %H:%M:%S', dayfirst = True)
 df['montant'] = df['montant'].apply(lambda x: convert_euros_to_float(x)).astype(float)
 df['beneficiaire'] = df['beneficiaire'].fillna("NULL")
 df['methode'] = df['methode'].fillna("NULL")
 df['notes'] = df['notes'].fillna("NULL")
 for index, row in df.iterrows() :
-	doc = {
-	  "@timestamp": row['date'].isoformat(),
-	  "session": row['session'],
-	  "player": row['joueur'],
-	  "tx_type": row['type'],
-	  "amount": str(row['montant']),
-	  "beneficiary": row['beneficiaire'],
-	  "method": row['methode'],
-	  "notes": row['notes']
-	}
-	resp = es_client.index(index=ELASTIC_INDEX, document=doc)
+  doc = {
+    "@timestamp": row['date'].isoformat(),
+    "session": row['session'],
+    "player": row['joueur'],
+    "tx_type": row['type'],
+    "amount": str(row['montant']),
+    "beneficiary": row['beneficiaire'],
+    "method": row['methode'],
+    "notes": row['notes']
+  }
+  resp = es_client.index(index=ELASTIC_INDEX, document=doc)
 

@@ -11,7 +11,8 @@ from include.es_client import get_es_client
 next_session = get_next_session()
 default_host = 'JC'
 es_client = get_es_client()
-list_all_players = get_players(es_client)
+#list_all_players = get_players(es_client)
+list_all_players = RESGISTERED_PLAYERS
 
 if next_session is None :
 	

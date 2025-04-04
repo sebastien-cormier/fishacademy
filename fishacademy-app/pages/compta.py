@@ -6,6 +6,7 @@ from time import sleep
 
 import pandas as pd
 
+from include.app_config import *
 from include.es_client import get_es_client
 from include.es_queries import get_wallet, get_last_transactions, get_players, index_transaction, get_sessions
 
@@ -15,7 +16,8 @@ def get_last_session_name(session_list_) :
 es_client = get_es_client()
 df_wallet = get_wallet(es_client)
 df_transaction = get_last_transactions(es_client)
-list_all_players = get_players(es_client)
+#list_all_players = get_players(es_client)
+list_all_players = RESGISTERED_PLAYERS
 last_session_name = get_last_session_name(get_sessions(es_client))
 
 st.markdown("# Compta")
@@ -39,5 +41,8 @@ with st.expander("Ajout transaction", expanded=False):
 			st.rerun()
 			
 st.markdown("## Dernières transactions")
-st.dataframe(df_transaction.set_index(df_transaction.columns[0]))
+if df_transaction is None :
+	st.markdown("_Aucune transaction trouvée_")
+else :
+	st.dataframe(df_transaction.set_index(df_transaction.columns[0]))
 

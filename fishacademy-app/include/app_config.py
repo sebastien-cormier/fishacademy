@@ -23,3 +23,6 @@ PICKLE_NEXT_SESSION = '/datas/next_session.obj'
 CSV_CURRENT_SESSION = '/datas/current_session.csv'
 CSV_EXPORT_FILE = '/datas/fishacademy_transactions.csv'
 CSV_SESION_BACKUP_FILE = '/datas/session_backup/session_backup_<DATE>.csv'
+
+# PLAYERS
+RESGISTERED_PLAYERS = ["JC","Sebastien","Adrien","Kevin","Arnaud","Eric","Quentin","Baptiste","Willy","Gauthier","Lyes"]

@@ -80,10 +80,13 @@ def get_last_transactions(_client, _size=10) :
 				"Montant": round(float(hit["_source"]["amount"]),2),
 				"Moyen": hit["_source"]["method"]
 			})
-	df_ = pd.DataFrame(list_transfert)
-	df_['Montant'] = serie_to_euro_format(df_['Montant'])
-	df_['Date'] = serie_parse_elastic_date(df_['Date'])
-	return df_
+	if len(list_transfert)>0 :
+		df_ = pd.DataFrame(list_transfert)
+		df_['Montant'] = serie_to_euro_format(df_['Montant'])
+		df_['Date'] = serie_parse_elastic_date(df_['Date'])
+		return df_
+	else :
+		return None
 
 
 def index_game_session(_client, _df_session) :
@@ -140,6 +143,51 @@ def get_leaderboard(_client) :
 
 	return df_[['Joueur','winning']]
 
+
+def get_session_result(_client, _session) :
+	"""
+	Get the session result
+	"""
+	aggs_ = {
+	    "player_agg": {
+	      "terms": {
+	        "field": "player"
+	      },
+	      "aggs": {
+	        "winninf_aggs": {
+	          "sum": {
+	            "field": "amount"
+	          }
+	        },
+	        "winning_bucket_sort": {
+	          "bucket_sort": {
+	            "sort": [
+	              { "winninf_aggs": { "order": "desc" } } 
+	            ],
+	            "size": 100                                
+	          }
+	        }
+	      }
+	    }
+	  }
+	
+	filter_ = {
+		"bool": {
+			"filter": [
+				{"terms": { "tx_type": ["BUY_CHIPS","SELL_CHIPS"] } },
+			  	{"term": { "session": _session } },
+			   ]
+		}
+	}
+	resp = _client.search(index=ELASTIC_INDEX, size=0, query=filter_, aggs=aggs_)
+
+	result = []
+	for bucket in resp['aggregations']['player_agg']['buckets']:
+		result.append({"Joueur":bucket["key"], "winning":round(float(bucket["winninf_aggs"]["value"]),2)})
+	df_ = pd.DataFrame(result)
+	
+
+	return df_[['Joueur','winning']]
 
 
 def get_games(_client) :
