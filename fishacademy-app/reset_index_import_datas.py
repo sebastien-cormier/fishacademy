@@ -58,8 +58,13 @@ es_client.indices.create(index=ELASTIC_INDEX, ignore=400, body=settings_and_mapp
 print(f"Import datas from CSV file.")
 print(f"Load data from {INIT_DATAS_DOC_URL}...")
 df = pd.read_csv(INIT_DATAS_DOC_URL)
+
+# Remove duplicate header row if present
+if df.iloc[0]['date'] == 'date':
+    df = df.drop(0).reset_index(drop=True)
+
 #df['date'] = convert_csv_series_to_date(df['date'])
-df['date'] = pd.to_datetime(df['date'], format = '%Y-%m-%d %H:%M:%S', dayfirst = True)
+df['date'] = pd.to_datetime(df['date'], format='mixed', dayfirst=True)
 df['montant'] = df['montant'].apply(lambda x: convert_euros_to_float(x)).astype(float)
 df['beneficiaire'] = df['beneficiaire'].fillna("NULL")
 df['methode'] = df['methode'].fillna("NULL")
